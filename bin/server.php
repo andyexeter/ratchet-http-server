@@ -18,7 +18,9 @@ $logger = new Logger( 'access' );
 $logger->pushHandler( new StreamHandler( $config->get( 'log_dir' ) . '/access.log', Logger::DEBUG ) );
 $logger->pushHandler( new StreamHandler( 'php://stdout', Logger::DEBUG ) );
 
-$app = new App( 'localhost', 8080, '127.0.0.1' );
+$serverConfig = $config->get( 'server' );
+
+$app = new App( $serverConfig['host'], $serverConfig['port'], $serverConfig['address'] );
 
 $app->route( '/', new HomeController( $config, $logger ), [ '*' ] );
 $app->route( '/about', new AboutController( $config, $logger ), [ '*' ] );
