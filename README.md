@@ -2,6 +2,10 @@
 
 A proof of concept web server made using [Ratchet](http://socketo.me/).
 
+Ratchet was designed primarily to deal with WebSockets but contains an HTTP Server component. Using this
+component I present a proof of concept web server which will accept requests, return an appropriate
+response and then close the connection.
+
 Usage
 ------
 - Clone the repository:
