@@ -65,7 +65,7 @@ abstract class AbstractController implements HttpServerInterface {
 	 */
 	public function onOpen( ConnectionInterface $conn, RequestInterface $request = null ) {
 		$this->request = $request;
-		echo "Client {$conn->resourceId} connected from {$conn->remoteAddress}.\n";
+
 		$this->index();
 
 		$this->close( $conn );
@@ -77,7 +77,7 @@ abstract class AbstractController implements HttpServerInterface {
 	public function onClose( ConnectionInterface $conn ) {
 		$format = '%s - - "%s %s %s" %d "%s" "%s"';
 
-		$str = vsprintf( $format, [
+		$this->logger->addInfo( vsprintf( $format, [
 			$conn->remoteAddress,
 			$this->request->getMethod(),
 			$this->request->getPath(),
@@ -85,9 +85,7 @@ abstract class AbstractController implements HttpServerInterface {
 			$this->response->getStatusCode(),
 			$this->request->getHost(),
 			$this->request->getHeader( 'User-Agent' ),
-		] );
-
-		$this->logger->addInfo( $str );
+		] ) );
 	}
 
 	/**
@@ -107,7 +105,6 @@ abstract class AbstractController implements HttpServerInterface {
 	 */
 	protected function close( ConnectionInterface $conn ) {
 		$conn->send( $this->response );
-
 		$conn->close();
 	}
 }
