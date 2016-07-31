@@ -62,6 +62,8 @@ class Template implements \ArrayAccess {
 	/**
 	 * @param string $key
 	 * @param mixed  $value
+	 *
+	 * @return Template
 	 */
 	public function addData( $key, $value ) {
 		$this->data[ $key ] = $value;
@@ -81,7 +83,9 @@ class Template implements \ArrayAccess {
 	}
 
 	/**
-	 * @return array
+	 * @param null $key
+	 *
+	 * @return mixed
 	 */
 	public function getData( $key = null ) {
 		if ( $key === null ) {

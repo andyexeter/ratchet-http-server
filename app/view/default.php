@@ -1,4 +1,7 @@
-<!doctype html>
+<?php
+/** @var string $heading */
+/** @var string $content */
+?><!doctype html>
 <html class="no-js">
 <head>
 	<meta charset="utf-8"/>
@@ -17,10 +20,10 @@
 	</nav>
 </header>
 <main>
-<div class="container">
-	<h1><?php echo $heading; ?></h1>
-	<p><?php echo $content; ?>
-</div>
+	<div class="container">
+		<h1><?php echo $heading; ?></h1>
+		<p><?php echo $content; ?>
+	</div>
 </main>
 <footer>
 

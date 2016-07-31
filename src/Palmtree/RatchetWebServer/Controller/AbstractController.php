@@ -12,7 +12,8 @@ use Ratchet\Http\HttpServerInterface;
 
 /**
  * Class AbstractController
- * @package Palmtree\RatchetWebServer\Controller
+ * @package    Palmtree\RatchetWebServer
+ * @subpackage Controller
  */
 abstract class AbstractController implements HttpServerInterface {
 	/**

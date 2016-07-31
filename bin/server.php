@@ -18,6 +18,7 @@ $logger = new Logger( 'access' );
 $logger->pushHandler( new StreamHandler( $config->get( 'log_dir' ) . '/access.log', Logger::DEBUG ) );
 $logger->pushHandler( new StreamHandler( 'php://stdout', Logger::DEBUG ) );
 
+// App
 $serverConfig = $config->get( 'server' );
 
 $app = new App( $serverConfig['host'], $serverConfig['port'], $serverConfig['address'] );

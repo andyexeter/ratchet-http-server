@@ -2,7 +2,15 @@
 
 namespace Palmtree\RatchetWebServer\Controller;
 
+/**
+ * Class HomeController
+ * @package    Palmtree\RatchetWebServer
+ * @subpackage Controller
+ */
 class HomeController extends AbstractController {
+	/**
+	 *
+	 */
 	public function index() {
 		$this->template['heading'] = 'Hello World!';
 
