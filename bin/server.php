@@ -25,4 +25,6 @@ $app = new App( $serverConfig['host'], $serverConfig['port'], $serverConfig['add
 $app->route( '/', new HomeController( $config, $logger ), [ '*' ] );
 $app->route( '/about', new AboutController( $config, $logger ), [ '*' ] );
 
+$url = "http://{$serverConfig['host']}:{$serverConfig['port']}";
+echo "Waiting for connections on $url...\n";
 $app->run();
