@@ -1,0 +1,15 @@
+{
+  "name": "palmtree/ratchet-http-server",
+  "description": "A proof of concept HTTP server using Ratchet",
+  "type": "project",
+  "license": "GPL2",
+  "require": {
+    "cboden/ratchet": "^0.3.5",
+    "monolog/monolog": "^1.20"
+  },
+  "autoload": {
+    "psr-4": {
+      "Palmtree\\": "src/Palmtree/"
+    }
+  }
+}
