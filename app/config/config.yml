@@ -1,0 +1,10 @@
+server:
+  host: 'localhost'
+  port: 8080
+  address: '127.0.0.1'
+
+paths:
+  app: '%paths.root%/app'
+  view: '%paths.app%/view'
+  var: '%paths.root%/var'
+  log: '%paths.var%/log'

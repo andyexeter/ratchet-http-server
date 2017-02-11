@@ -3,17 +3,16 @@
 namespace Palmtree\RatchetWebServer\Controller;
 
 /**
- * Class AboutController
+ * Class NotFoundController
  * @package    Palmtree\RatchetWebServer
  * @subpackage Controller
  */
-class AboutController extends AbstractController {
+class NotFoundController extends AbstractController {
 	/**
 	 *
 	 */
 	public function index() {
-		$this->template['heading'] = 'About Us';
-
-		$this->response->setBody( $this->template );
+		$this->response->setStatus( 404 );
+		$this->response->setBody( '404 Not Found.' );
 	}
 }

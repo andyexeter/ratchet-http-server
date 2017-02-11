@@ -5,7 +5,7 @@ namespace Palmtree\RatchetWebServer\Controller;
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response;
 use Monolog\Logger;
-use Palmtree\Service\Config;
+use Palmtree\Service\Config\Config;
 use Palmtree\Service\Template;
 use Ratchet\ConnectionInterface;
 use Ratchet\Http\HttpServerInterface;
@@ -52,7 +52,8 @@ abstract class AbstractController implements HttpServerInterface {
 		] );
 
 		$this->template = new Template( [
-			'path' => $this->config->get( 'view_dir' ),
+			'path' => $this->config->get( 'paths' )['view'],
+			'file' => 'default.php',
 		] );
 	}
 
@@ -77,8 +78,7 @@ abstract class AbstractController implements HttpServerInterface {
 	 */
 	public function onClose( ConnectionInterface $conn ) {
 		$format = '%s - - "%s %s %s" %d "%s" "%s"';
-
-		$this->logger->addInfo( vsprintf( $format, [
+		$params = [
 			$conn->remoteAddress,
 			$this->request->getMethod(),
 			$this->request->getPath(),
@@ -86,7 +86,9 @@ abstract class AbstractController implements HttpServerInterface {
 			$this->response->getStatusCode(),
 			$this->request->getHost(),
 			$this->request->getHeader( 'User-Agent' ),
-		] ) );
+		];
+
+		$this->logger->addInfo( vsprintf( $format, $params ) );
 	}
 
 	/**

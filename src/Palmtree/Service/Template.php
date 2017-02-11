@@ -4,9 +4,13 @@ namespace Palmtree\Service;
 
 /**
  * Class Template
- * @package    Palmtree\Service
+ * @package Palmtree\Service
  */
 class Template implements \ArrayAccess {
+	/**
+	 * @var string
+	 */
+	private $file = '';
 	/**
 	 * @var string
 	 */
@@ -22,22 +26,19 @@ class Template implements \ArrayAccess {
 	 * @param array $args
 	 */
 	public function __construct( array $args = [ ] ) {
-		if ( isset( $args['path'] ) ) {
-			$this->setPath( $args['path'] );
-		}
+		$this->parseArgs( $args );
+	}
 
-		if ( isset( $args['data'] ) ) {
-			$this->setData( $args['data'] );
-		}
+	public function __toString() {
+		return $this->fetch();
 	}
 
 	/**
-	 * @param $file
-	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function fetch( $file ) {
+	public function fetch() {
+		$file = $this->getFile();
 		$path = $this->getPath();
 
 		if ( ! empty( $path ) ) {
@@ -118,9 +119,7 @@ class Template implements \ArrayAccess {
 	}
 
 	public function offsetExists( $offset ) {
-		$data = $this->getData( $offset );
-
-		return $data !== null;
+		return $this->getData( $offset ) !== null;
 	}
 
 	public function offsetGet( $offset ) {
@@ -133,5 +132,28 @@ class Template implements \ArrayAccess {
 
 	public function offsetUnset( $offset ) {
 		$this->removeData( $offset );
+	}
+
+	/**
+	 * @param string $file
+	 *
+	 * @return Template
+	 */
+	public function setFile( $file ) {
+		$this->file = $file;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFile() {
+		return $this->file;
+	}
+
+	private function parseArgs( array $args ) {
+		$parser = new ArgParser( $args );
+		$parser->parseSetters( $this );
 	}
 }

@@ -19,6 +19,6 @@ class HomeController extends AbstractController {
 
 		$this->template['content'] = $content;
 
-		$this->response->setBody( $this->template->fetch( 'default' ) );
+		$this->response->setBody( $this->template );
 	}
 }
