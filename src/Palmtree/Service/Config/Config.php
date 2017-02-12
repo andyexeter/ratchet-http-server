@@ -12,103 +12,144 @@ namespace Palmtree\Service\Config;
  * Class Config
  * @package Palmtree\Service\Config
  */
-class Config implements \ArrayAccess, \Serializable {
-	/**
-	 * @var array
-	 */
-	private $data = [];
+class Config implements \ArrayAccess, \Serializable
+{
+    /**
+     * @var array
+     */
+    private $data = [];
 
-	/**
-	 * Config constructor.
-	 *
-	 * @param array $config
-	 */
-	public function __construct( array $config = [] ) {
-		foreach ( $config as $key => $value ) {
-			$this->set( $key, $value );
-		}
-	}
+    private $deepCache = [];
 
-	public function all() {
-		return $this->data;
-	}
+    /**
+     * Config constructor.
+     *
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        foreach ($config as $key => $value) {
+            $this->set($key, $value);
+        }
+    }
 
-	public function merge( $parameters ) {
-		$this->data = array_replace_recursive( $this->data, $parameters );
-	}
+    public function all()
+    {
+        return $this->data;
+    }
 
-	/**
-	 * @param $key
-	 *
-	 * @return bool
-	 */
-	public function has( $key ) {
-		return isset( $this->data[ $key ] ) || array_key_exists( $key, $this->data );
-	}
+    public function merge($parameters)
+    {
+        $this->data = array_replace_recursive($this->data, $parameters);
+    }
 
-	/**
-	 * @param $key
-	 *
-	 * @return mixed|null
-	 */
-	public function get( $key ) {
-		return $this->has( $key ) ? $this->data[ $key ] : null;
-	}
+    /**
+     * @param $key
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return isset($this->data[$key]) || array_key_exists($key, $this->data);
+    }
 
-	/**
-	 * @param $key
-	 * @param $value
-	 */
-	public function set( $key, $value ) {
-		$this->data[ $key ] = $value;
-	}
+    /**
+     * @param $key
+     *
+     * @return mixed|null
+     */
+    public function get($key)
+    {
+        if ($this->has($key)) {
+            return $this->data[$key];
+        }
 
-	/**
-	 * @param $key
-	 */
-	public function remove( $key ) {
-		unset( $this->data[ $key ] );
-	}
+        // Allow nested config values to be retreived e.g paths.app
+        if (strpos($key, '.') !== false) {
+            if (! array_key_exists($key, $this->deepCache)) {
+                $tmp = $this->data;
 
-	/**
-	 * @inheritDoc
-	 */
-	public function offsetExists( $offset ) {
-		return $this->has( $offset );
-	}
+                foreach (explode('.', $key) as $part) {
+                    if (! array_key_exists($part, $tmp)) {
+                        unset($this->deepCache[$key]);
 
-	/**
-	 * @inheritDoc
-	 */
-	public function offsetGet( $offset ) {
-		return $this->get( $offset );
-	}
+                        return null;
+                    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function offsetSet( $offset, $value ) {
-		$this->set( $offset, $value );
-	}
+                    $tmp = $tmp[$part];
+                }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function offsetUnset( $offset ) {
-		$this->remove( $offset );
-	}
+                $this->deepCache[$key] = $tmp;
+            }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function serialize() {
-		return serialize( $this->data );
-	}
+            return $this->deepCache[$key];
+        }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function unserialize( $serialized ) {
-		return unserialize( $serialized );
-	}
+        return null;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function set($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+
+    /**
+     * @param $key
+     */
+    public function remove($key)
+    {
+        unset($this->data[$key]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetExists($offset)
+    {
+        return $this->has($offset);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function offsetUnset($offset)
+    {
+        $this->remove($offset);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function serialize()
+    {
+        return serialize($this->data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function unserialize($serialized)
+    {
+        return unserialize($serialized);
+    }
 }

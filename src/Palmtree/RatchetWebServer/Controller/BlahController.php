@@ -3,19 +3,19 @@
 namespace Palmtree\RatchetWebServer\Controller;
 
 /**
- * Class AboutController
+ * Class BlahController
  * @package    Palmtree\RatchetWebServer
  * @subpackage Controller
  */
-class AboutController extends AbstractController
+class BlahController extends AbstractController
 {
     /**
      *
      */
     public function index()
     {
-        $this->template['heading'] = 'About Us';
-        $this->template['content'] = 'My about page';
+        $this->template['heading'] = 'Contact';
+        $this->template['content'] = 'My contact page';
 
         $this->response->setBody($this->template);
     }

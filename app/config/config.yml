@@ -8,3 +8,5 @@ paths:
   view: '%paths.app%/view'
   var: '%paths.root%/var'
   log: '%paths.var%/log'
+
+controllers: 'Palmtree\RatchetWebServer\Controller'

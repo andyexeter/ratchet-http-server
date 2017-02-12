@@ -15,99 +15,106 @@ use Ratchet\Http\HttpServerInterface;
  * @package    Palmtree\RatchetWebServer
  * @subpackage Controller
  */
-abstract class AbstractController implements HttpServerInterface {
-	/**
-	 * @var RequestInterface
-	 */
-	protected $request;
-	/**
-	 * @var Response
-	 */
-	protected $response;
-	/**
-	 * @var Template
-	 */
-	protected $template;
-	/**
-	 * @var Config
-	 */
-	protected $config;
-	/**
-	 * @var Logger
-	 */
-	protected $logger;
+abstract class AbstractController implements HttpServerInterface
+{
+    /**
+     * @var RequestInterface
+     */
+    protected $request;
+    /**
+     * @var Response
+     */
+    protected $response;
+    /**
+     * @var Template
+     */
+    protected $template;
+    /**
+     * @var Config
+     */
+    protected $config;
+    /**
+     * @var Logger
+     */
+    protected $logger;
 
-	/**
-	 * AbstractController constructor.
-	 *
-	 * @param Config $config
-	 * @param Logger $logger
-	 */
-	public function __construct( Config $config, Logger $logger ) {
-		$this->config = $config;
-		$this->logger = $logger;
+    /**
+     * AbstractController constructor.
+     *
+     * @param Config $config
+     * @param Logger $logger
+     */
+    public function __construct(Config $config, Logger $logger)
+    {
+        $this->config = $config;
+        $this->logger = $logger;
 
-		$this->response = new Response( 200, [
-			'Content-Type' => 'text/html; charset=utf-8',
-		] );
+        $this->response = new Response(200, [
+            'Content-Type' => 'text/html; charset=utf-8',
+        ]);
 
-		$this->template = new Template( [
-			'path' => $this->config->get( 'paths' )['view'],
-			'file' => 'default.php',
-		] );
-	}
+        $this->template = new Template([
+            'path' => $this->config->get('paths')['view'],
+            'file' => 'default.php',
+        ]);
+    }
 
-	/**
-	 * @return mixed
-	 */
-	abstract public function index();
+    /**
+     * @return mixed
+     */
+    abstract public function index();
 
-	/**
-	 * @inheritDoc
-	 */
-	public function onOpen( ConnectionInterface $conn, RequestInterface $request = null ) {
-		$this->request = $request;
+    /**
+     * @inheritDoc
+     */
+    public function onOpen(ConnectionInterface $conn, RequestInterface $request = null)
+    {
+        $this->request = $request;
 
-		$this->index();
+        $this->index();
 
-		$this->close( $conn );
-	}
+        $this->close($conn);
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function onClose( ConnectionInterface $conn ) {
-		$format = '%s - - "%s %s %s" %d "%s" "%s"';
-		$params = [
-			$conn->remoteAddress,
-			$this->request->getMethod(),
-			$this->request->getPath(),
-			'HTTP/' . $this->request->getProtocolVersion(),
-			$this->response->getStatusCode(),
-			$this->request->getHost(),
-			$this->request->getHeader( 'User-Agent' ),
-		];
+    /**
+     * @inheritDoc
+     */
+    public function onClose(ConnectionInterface $conn)
+    {
+        $format = '%s - - "%s %s %s" %d "%s" "%s"';
+        $params = [
+            $conn->remoteAddress,
+            $this->request->getMethod(),
+            $this->request->getPath(),
+            'HTTP/' . $this->request->getProtocolVersion(),
+            $this->response->getStatusCode(),
+            $this->request->getHost(),
+            $this->request->getHeader('User-Agent'),
+        ];
 
-		$this->logger->addInfo( vsprintf( $format, $params ) );
-	}
+        $this->logger->addInfo(vsprintf($format, $params));
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function onError( ConnectionInterface $conn, \Exception $e ) {
-	}
+    /**
+     * @inheritDoc
+     */
+    public function onError(ConnectionInterface $conn, \Exception $e)
+    {
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function onMessage( ConnectionInterface $from, $msg ) {
-	}
+    /**
+     * @inheritDoc
+     */
+    public function onMessage(ConnectionInterface $from, $msg)
+    {
+    }
 
-	/**
-	 * @param ConnectionInterface $conn
-	 */
-	protected function close( ConnectionInterface $conn ) {
-		$conn->send( $this->response );
-		$conn->close();
-	}
+    /**
+     * @param ConnectionInterface $conn
+     */
+    protected function close(ConnectionInterface $conn)
+    {
+        $conn->send($this->response);
+        $conn->close();
+    }
 }

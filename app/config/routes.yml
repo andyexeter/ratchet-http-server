@@ -1,0 +1,9 @@
+home:
+  path: '/'
+
+about:
+  path: '/about'
+
+contact:
+  path: '/contact'
+  controller: 'Palmtree\RatchetWebServer\Controller\BlahController'
